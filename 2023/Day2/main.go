@@ -21,6 +21,7 @@ func main() {
     cubeConf := CubeConf{nRed: 12, nBlue: 14, nGreen: 13}
     fmt.Printf("Cube configuration: Red: %d, Blue: %d, Green: %d\n", cubeConf.nRed, cubeConf.nBlue, cubeConf.nGreen)
     idSum := 0 
+    power := 0
 
     f, err := os.Open("input")
 	if err != nil {
@@ -51,6 +52,10 @@ func main() {
 			continue
 		}
 
+        minRed := 0
+        minBlue := 0
+        minGreen := 0
+
 		// Find game ID in the game string
 		matchGame := reGame.FindStringSubmatch(game)
 		gameID, _ := strconv.Atoi(matchGame[1])
@@ -78,10 +83,19 @@ func main() {
                 switch color {
                 case "red":
                     redCount += count
+                    if(minRed < count){
+                        minRed = count
+                    }
                 case "blue":
                     blueCount += count
+                    if(minBlue < count){
+                        minBlue = count
+                    }
                 case "green":
                     greenCount += count
+                    if(minGreen < count){
+                        minGreen = count
+                    }
                 }
             }
             // Debugging: Print counts for each game
@@ -99,11 +113,13 @@ func main() {
                 possible = false
             }
         }
+        power = power + minRed * minBlue * minGreen
         if(possible){
             idSum += gameID
         }
 
 	}
     fmt.Println(idSum)
+    fmt.Println(power)
 }
 
