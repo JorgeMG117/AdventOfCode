@@ -1,14 +1,19 @@
-
-
 points = 0
 
 # Read file
 with open("input.txt", "r") as file:
     data = file.read().splitlines()
 
+# Create empyt int list
+copies = []
+
 #print(data)
-for card in data:
-    card_points = 0
+for i, card in enumerate(data):
+    # Add original coppy
+    if i >= len(copies):
+        copies.append(1)
+    else:
+        copies[i] += 1
 
     # Split string by char | into two parts
     card = card.split("|")
@@ -21,14 +26,16 @@ for card in data:
     winning_numbers = {num: True for num in winnning_numbers}
 
     # Check if my numbers are in winning numbers
+    k = i + 1
     for num in my_numbers:
         if num in winning_numbers:
-            if card_points == 0:
-                card_points = 1
+            if k < len(copies):
+                copies[k] += copies[i]
             else:
-                card_points = card_points * 2
+                copies.append(copies[i])
+            k += 1
 
-    points += card_points
+    points += copies[i]
 
     
 print(points)
