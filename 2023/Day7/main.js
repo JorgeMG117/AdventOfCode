@@ -1,6 +1,6 @@
 class Card {
     constructor(value) {
-        const validValues = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J','Q', 'K', 'A'];
+        const validValues = ['J', '2', '3', '4', '5', '6', '7', '8', '9', 'T','Q', 'K', 'A'];
         if (!validValues.includes(value)) {
             throw new Error('Invalid card value');
         }
@@ -15,12 +15,27 @@ class Hand {
             throw new Error('A hand must consist of exactly 5 cards');
         }
         this.cards = [];
-        const counts = {};
+        //Create count with 0 on every possible value
+        const counts = {J: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6:0, 7:0, 8:0, 9:0, T:0, Q:0, K:0, A:0}
+        //const counts = {};
+        let jokers = 0;
+        //const counts = {};
         for (let i = 0; i < cards.length; i++) {
             this.cards.push(new Card(cards[i]));
-            counts[cards[i]] = (counts[cards[i]] || 0) + 1;
+            if(cards[i] === 'J') {
+                jokers += 1;
+            }
+            else {
+                counts[cards[i]] = (counts[cards[i]] || 0) + 1;
+            }
         }
-
+        
+        // Distribute the jokers to maximize the hand value
+        while (jokers > 0) {
+            let maxKey = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+            counts[maxKey] += 1;
+            jokers -= 1;
+        }
         const countValues = Object.values(counts);
         countValues.sort((a, b) => b - a);
 
@@ -82,8 +97,8 @@ for (let line of lines) {
     const bet = parseInt(betStr, 10);
     if(handBets.length === 0) {
         handBets.push(new HandBet(hand, bet));
-        console.log("Adding first hand");
-        console.log(handBets);
+        //console.log("Adding first hand");
+        //console.log(handBets);
         continue;
     }
 
@@ -103,8 +118,8 @@ for (let line of lines) {
 
     // Insert the new element at the correct position
     handBets.splice(low, 0, new HandBet(hand, bet));
-    console.log("Inserted new hand");
-    console.log(handBets);
+    //console.log("Inserted new hand");
+    //console.log(handBets);
 }
 
 totalWinnings = 0;
