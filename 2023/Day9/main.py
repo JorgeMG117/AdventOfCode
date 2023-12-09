@@ -33,8 +33,8 @@ with open('input.txt', 'r') as f:
                     all_zero = False
 
             if all_zero:
-                # First to extrapolate
-                differences.append(0)
+                # First to extrapolate, append 0 at begginning
+                differences.insert(0, 0)
                 exit = True
 
             nums = differences
@@ -42,15 +42,15 @@ with open('input.txt', 'r') as f:
 
         # Loop report backwards, len - 1 to 1
         for i in range(len(report) - 1, 0, -1):
-            # Get last element of i
-            last = report[i][-1]
+            # Get first element of i
+            first = report[i][0]
             # Get last of i + 1
-            last_next = report[i - 1][-1]
-            extrapolated = last + last_next
+            first_next = report[i - 1][0]
+            extrapolated = first_next - first
 
-            report[i - 1].append(extrapolated)
+            report[i - 1].insert(0, extrapolated)
 
-        sum_extrapolated += report[0][-1]
+        sum_extrapolated += report[0][0]
 
         print(report)
     print(sum_extrapolated) 
