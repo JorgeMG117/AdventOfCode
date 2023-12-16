@@ -1,25 +1,28 @@
 import math
 
+expansion_factor = 1000000
+
 def expand_universe(matrix):
     rows_to_duplicate = [i for i, row in enumerate(matrix) if set(row) == {'.'}]
     cols_to_duplicate = [j for j in range(len(matrix[0])) if all(matrix[i][j] == '.' for i in range(len(matrix)))]
 
-    for i in sorted(rows_to_duplicate, reverse=True):
-        matrix.insert(i, matrix[i])
+    return rows_to_duplicate, cols_to_duplicate
 
-    transposed_matrix = list(map(list, zip(*matrix)))
-
-    for j in sorted(cols_to_duplicate, reverse=True):
-        transposed_matrix.insert(j, transposed_matrix[j])
-
-    return list(map(list, zip(*transposed_matrix)))
 
 
 def get_galaxies_positions(universe):
     return [(i, j) for i, row in enumerate(universe) for j, cell in enumerate(row) if cell == '#']
 
-def dist_between_galaxies(galaxy1, galaxy2):
-    return abs(galaxy2[0] - galaxy1[0]) + abs(galaxy2[1] - galaxy1[1])
+def dist_between_galaxies(galaxy1, galaxy2, expansion_rows, expansion_cols):
+    # Check how many values in between are in expansion_indices_rows and expansion_indices_cols
+    lower_bound_row = min(galaxy1[0], galaxy2[0])
+    upper_bound_row = max(galaxy1[0], galaxy2[0])
+    expansions_row = sum(lower_bound_row <= elem <= upper_bound_row for elem in expansion_rows)
+    lower_bound_col = min(galaxy1[1], galaxy2[1])
+    upper_bound_col = max(galaxy1[1], galaxy2[1])
+    expansions_col = sum(lower_bound_col <= elem <= upper_bound_col for elem in expansion_cols) 
+
+    return abs(galaxy2[0] - galaxy1[0]) - expansions_row + expansions_row * expansion_factor + abs(galaxy2[1] - galaxy1[1]) - expansions_col + expansions_col * expansion_factor
 
 
 
@@ -30,8 +33,9 @@ with open('input.txt', 'r') as f:
 
 
 # Expand the universe
-universe = expand_universe(lines)
-# print(universe)
+universe = lines
+expansion_indices_rows, expansion_indices_cols = expand_universe(universe)
+
 
 # Get galaxies positions and create pairs of galaxies
 galaxies_pairs = []
@@ -49,6 +53,6 @@ for pair in galaxies_pairs:
     # print("Pair: ", pair)
     # print("Distance: ", dist_between_galaxies(pair[0], pair[1]))
     # print()
-    distance_sum += dist_between_galaxies(pair[0], pair[1])
+    distance_sum += dist_between_galaxies(pair[0], pair[1], expansion_indices_rows, expansion_indices_cols)
 
 print(distance_sum)
