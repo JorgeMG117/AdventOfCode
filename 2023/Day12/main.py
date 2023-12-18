@@ -30,71 +30,6 @@ def process_file_content(file_path):
     return pattern_list, numbers_list
 
 
-"""
-def prueba(pattern, index_pattern, numbers, index_numbers, previous):
-    if index_pattern == len(pattern):
-        if index_numbers == len(numbers):
-            return 1
-        else:
-            return 0
-    if pattern[index_pattern] == OPERATIONAL:
-        if numbers[index_numbers] == 0:
-            return prueba(pattern, index_pattern + 1,
-                            numbers, index_numbers + 1, OPERATIONAL)
-        else:
-            return prueba(pattern, index_pattern + 1,
-                            numbers, index_numbers, OPERATIONAL)
-    if pattern[index_pattern] == DAMAGED:
-        if previous == DAMAGED:
-            if numbers[index_numbers] == 0:
-                return 0
-            else:
-                numbers[index_numbers] -= 1
-                return prueba(pattern, index_pattern + 1,
-                            numbers, index_numbers, DAMAGED)
-        elif previous == OPERATIONAL:
-            if numbers[index_numbers] == 0:
-                return 0
-            else:
-                numbers[index_numbers] -= 1
-                return prueba(pattern, index_pattern + 1,
-                            numbers, index_numbers, DAMAGED)
-    if pattern[index_pattern] == UNKNOWN:
-        if previous == DAMAGED:
-            # This one has to be operational
-            if numbers[index_numbers] == 0:
-                return prueba(pattern, index_pattern + 1,
-                            numbers, index_numbers + 1, OPERATIONAL)
-            else:
-                numbers[index_numbers] -= 1
-                return prueba(pattern, index_pattern + 1,
-                            numbers, index_numbers, DAMAGED)
-        elif previous == OPERATIONAL:
-            if numbers[index_numbers] > 0:
-                numbers_copy = numbers.copy()
-                numbers_copy2 = numbers.copy()
-                numbers_copy[index_numbers] -= 1
-                val1 = prueba(pattern, index_pattern + 1,
-                                numbers_copy, index_numbers, DAMAGED)
-                val2 = prueba(pattern, index_pattern + 1,
-                              numbers_copy2, index_numbers, OPERATIONAL)
-                return val1 + val2
-"""
-
-#OPERATIONAL
-    # if num < 0 return 0
-
-
-#DAMAGED
-    # if num > 0 
-        # num -= 1
-    # else return 0
-
-#UNKNOWN
-    #Decide OPERATIONAL
-    #Decide DAMAGED
-
-
 
 def arrangements(pattern, index_pattern, numbers, index_numbers):
     #print("Index pattern: ", index_pattern)
@@ -105,14 +40,6 @@ def arrangements(pattern, index_pattern, numbers, index_numbers):
                 return 0
         #print("Returning 1")
         return 1
-        """
-        if index_numbers == len(numbers):
-            return 1
-        elif index_numbers == len(numbers)-1 and numbers[index_numbers] == 0:
-            return 1
-        else:
-            return 0
-        """
     elif index_numbers == len(numbers):#All numbers are used
         if pattern[index_pattern] == DAMAGED:
             return 0
@@ -145,11 +72,11 @@ def arrangements(pattern, index_pattern, numbers, index_numbers):
         numbers_copy_2 = numbers.copy()
         #print("UNKNOWN")
         # Behave as OPERATIONAL
-        if numbers[index_numbers] == 0:
+        if numbers_copy_1[index_numbers] == 0:
             #print("OPERATIONAL 0")
             val1 = arrangements(pattern, index_pattern + 1,
                             numbers_copy_1, index_numbers + 1)
-        elif numbers[index_numbers] < 0:
+        elif numbers_copy_1[index_numbers] < 0:
             #print("OPERATIONAL < 0")
             val1 = 0
         else:
