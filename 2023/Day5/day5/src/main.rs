@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
+use std::collections::HashSet;
 
 
 //50 98 2
@@ -121,9 +122,23 @@ fn process_file(reader: io::BufReader<File>) -> io::Result<()> {
         }
     }
     */
+    let mut extended_seeds: HashSet<u64> = HashSet::new();
+    //let mut extended_seeds: Vec<u64> = Vec::new();
+    for pair in seeds.chunks(2) {
+        if pair.len() == 2 {
+            let start = pair[0];
+            let end = start + pair[1]-1;
+            // Process the pair as needed
+            //println!("Start: {}, End: {}", start, end);
+            for value in start..=end {
+                extended_seeds.insert(value);
+            }
+        }
+    }
+    //println!("Seeds: {:?}", seeds);
 
     let mut min_value: u64 = 0;
-    for seed in seeds.iter() {
+    for seed in extended_seeds.iter() {
         let mut value = *seed;
         for map in maps.iter() {
             for description in map.descriptions.iter() {
@@ -137,7 +152,7 @@ fn process_file(reader: io::BufReader<File>) -> io::Result<()> {
             min_value = value;
         }
 
-        println!("Seed: {}, Value: {}", seed, value);
+        //println!("Seed: {}, Value: {}", seed, value);
     }
     println!("Min Value: {}", min_value);
     Ok(())
@@ -153,6 +168,7 @@ fn main() -> io::Result<()> {
 
     // Run each seed value through the maps safe the lowest value
 
+    //let path = Path::new("example.txt");
     let path = Path::new("input.txt");
     let file = File::open(&path)?;
 
